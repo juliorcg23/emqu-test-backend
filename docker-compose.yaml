@@ -15,7 +15,7 @@ services:
             - 8000:80
 
     database:
-        image: mariadb:latest
+        image: mariadb:10.8.2
         container_name: emqu_db
         restart: unless-stopped
         networks:
