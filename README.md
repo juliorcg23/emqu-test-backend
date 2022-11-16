@@ -11,6 +11,9 @@
 #php artisan serve
 
 <h1>Using docker<h1>
-#docker build -t emqu-backend .
 
-#docker run -dit -p 8000:8000 --name emqu emqu-backend
+<p>Run backend service</p>
+<p>docker-compose up --build -d</p>
+
+<p>Run migrations and seeders</p>
+<p>docker-compose exec main php artisan migrate:fresh --seed</p>

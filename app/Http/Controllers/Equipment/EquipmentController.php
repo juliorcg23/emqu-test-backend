@@ -57,7 +57,9 @@ class EquipmentController extends BaseController
      */
     public function show($id)
     {
-        //
+        $equipment = Equipment::find($id);
+
+        return $this->sendResponse($equipment, 'Data loaded');
     }
 
     /**
@@ -69,7 +71,21 @@ class EquipmentController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'ip' => 'required|ipv4',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation error', $validator->errors(), 400);
+        }
+
+        $equipment = Equipment::find($id)->update([
+            'name' => $request->get('name'),
+            'ip' => $request->get('ip'),
+        ]);
+
+        return $this->sendResponse($equipment, 'Equipment updated successfully');
     }
 
     /**
@@ -80,6 +96,14 @@ class EquipmentController extends BaseController
      */
     public function destroy($id)
     {
-        //
+        $equipment = Equipment::with('tests')->find($id);
+
+        if (count($equipment->tests) === 0) {
+            $equipment->delete();
+
+            return $this->sendResponse($equipment, 'Equipment deleted successfully');
+        }
+
+        return $this->sendError('Cannot delete equipment because it has tests', [], 400);
     }
 }

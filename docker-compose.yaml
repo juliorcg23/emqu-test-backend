@@ -1,11 +1,39 @@
-version: '1.0'
-services: 
+version: '3.9'
+services:
     main:
         build: 
             context: .
             dockerfile: Dockerfile
-        command: 'php artisan serve --host=0.0.0.0'
+        container_name: emqu_backend
         volumes:
-            - .:/app
+            - .:/var/www/html
+        depends_on:
+            - database
+        networks:
+            - emqu
         ports:
-            - 8000:8000
+            - 8000:80
+
+    database:
+        image: mariadb:latest
+        container_name: emqu_db
+        restart: unless-stopped
+        networks:
+            - emqu
+        environment:
+            - MYSQL_DATABASE=emqu_db
+            - MYSQL_USER=emqu_user
+            - MYSQL_PASSWORD=password
+            - MYSQL_ROOT_PASSWORD=password
+        volumes:
+            - db_data:/var/lib/mysql
+        ports:
+            - 3306:3306
+
+networks:
+    emqu:
+        driver: bridge
+
+volumes:
+    db_data:
+        driver: local

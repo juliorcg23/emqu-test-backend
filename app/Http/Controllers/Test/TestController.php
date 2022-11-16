@@ -48,9 +48,9 @@ class TestController extends BaseController
         $testResult->raw = '';
         $testResult->sequence = '';
 
-        $averageLatency = property_exists($testResult, 'latency') ? $testResult->latency * 1000 : 0;
-        $minLatency = property_exists($testResult, 'rtt') ? $testResult->rtt->min * 1000 : 0;
-        $maxLatency = property_exists($testResult, 'rtt') ? $testResult->rtt->max * 1000 : 0;
+        $averageLatency = property_exists($testResult, 'latency') ? (int) $testResult->latency : 0;
+        $minLatency = property_exists($testResult, 'rtt') ? (int) $testResult->rtt->min : 0;
+        $maxLatency = property_exists($testResult, 'rtt') ? (int) $testResult->rtt->max : 0;
         $attemptsDone = property_exists($testResult, 'statistics') ? $testResult->statistics->packets_transmitted : 0;
         $attemptsFailed = property_exists($testResult, 'statistics') ? $testResult->statistics->packets_lost : 0;
         $successful = $testResult->host_status === 'Ok';
@@ -76,7 +76,9 @@ class TestController extends BaseController
      */
     public function show($id)
     {
-        //
+        $test = Test::with('equipment')->find($id);
+
+        return $this->sendResponse($test, 'Data loaded');
     }
 
     /**
