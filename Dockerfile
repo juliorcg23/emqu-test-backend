@@ -18,7 +18,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/componser
 WORKDIR /var/www/html
 COPY . .
 RUN cp .env.example .env
-RUN composer install \
-  && php artisan key:generate
 
-ENTRYPOINT docker-php-entrypoint apache2-foreground
+ENTRYPOINT composer install \
+  && php artisan key:generate \
+  && docker-php-entrypoint apache2-foreground
