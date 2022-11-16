@@ -5,23 +5,24 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\BaseController;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Validator;
 
-class RegisterController extends BaseController
+class AuthController extends BaseController
 {
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required',
             'confirm_password' => 'required|same:password'
         ]);
 
         if ($validator->fails())
         {
-            return $this->sendError('Validation error', $validator->errors());
+            return $this->sendError('Validation error', $validator->errors(), 400);
         }
 
         $input = $request->all();
@@ -42,16 +43,14 @@ class RegisterController extends BaseController
 
         if ($validator->fails())
         {
-            return $this->sendError('Validation error', $validator->errors());
+            return $this->sendError('Validation error', $validator->errors(), 400);
         }
 
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user || !Hash::check($request->password, $user->password))
+        if (Auth::attempt($request->only('email', 'password')))
         {
             $user = Auth::user();
-            $success['token'] = $user->createToken('emqu')->plainTextToken;
-            $success['name'] = $user->name;
+            $success['token'] = $request->user()->createToken('emqu')->plainTextToken;
+            $success['email'] = $user->email;
 
             return $this->sendResponse($success, 'Logged in successfully!');
         }

@@ -16,8 +16,12 @@ class CreateTestsTable extends Migration
         Schema::create('tests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('equipment_id')->constrained('equipment');
-            $table->mediumInteger('latency');
-            $table->boolean('successfully');
+            $table->mediumInteger('average_latency');
+            $table->mediumInteger('maximum_latency');
+            $table->mediumInteger('minimum_latency');
+            $table->boolean('successful');
+            $table->tinyInteger('attempts');
+            $table->tinyInteger('failed_attempts');
             $table->softDeletes();
             $table->timestamps();
         });

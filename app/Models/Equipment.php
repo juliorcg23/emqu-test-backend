@@ -15,4 +15,8 @@ class Equipment extends Model
         'ip',
         'user_id',
     ];
+
+    public function tests() {
+        return $this->hasMany(Test::class);
+    }
 }

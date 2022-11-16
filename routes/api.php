@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Equipment\EquipmentController;
+use App\Http\Controllers\Test\TestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,10 +17,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('/auth/token', [\App\Http\Controllers\Auth\AuthController::class, 'token']);
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group([], function($routes) {
+Route::middleware('auth:sanctum')->group(function($routes) {
+    Route::apiResource('dashboard', DashboardController::class);
     Route::apiResource('equipment', EquipmentController::class);
+    Route::apiResource('test', TestController::class);
 });

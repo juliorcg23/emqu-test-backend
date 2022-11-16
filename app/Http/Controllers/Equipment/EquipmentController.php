@@ -6,8 +6,8 @@ use App\Http\Controllers\BaseController;
 use App\Http\Controllers\Controller;
 use App\Models\Equipment;
 use Illuminate\Http\Request;
-use Validator;
-use Auth;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class EquipmentController extends BaseController
 {
@@ -37,13 +37,13 @@ class EquipmentController extends BaseController
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError('Validation error', $validator->errors());
+            return $this->sendError('Validation error', $validator->errors(), 400);
         }
 
         $equipment = Equipment::create([
             'name' => $request->get('name'),
             'ip' => $request->get('ip'),
-            'user_id' => 1,
+            'user_id' => Auth::user()->id,
         ]);
 
         return $this->sendResponse($equipment, 'Equipment created successfully');
