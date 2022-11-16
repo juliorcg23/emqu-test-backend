@@ -28,7 +28,7 @@ services:
         volumes:
             - db_data:/var/lib/mysql
         ports:
-            - 33060:3306
+            - 6033:3306
 
 networks:
     emqu:
