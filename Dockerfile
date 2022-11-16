@@ -3,7 +3,7 @@ FROM php:7.4-apache
 RUN docker-php-ext-install pdo pdo_mysql sockets bcmath
 RUN curl -sS https://getcomposer.org/installer | php -- \
      --install-dir=/usr/local/bin --filename=composer
-RUN apt-get update -y && apt-get install -y iputils-ping
+RUN apt-get update -y && apt-get install -y zip iputils-ping
 RUN a2enmod rewrite headers
 
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
