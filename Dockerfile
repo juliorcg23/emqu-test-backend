@@ -15,7 +15,7 @@ RUN cp "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" && \
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/componser
 
-WORKDIR /emqu-backend
+WORKDIR /var/www/html
 COPY . .
 RUN cp .env.example .env
 RUN composer install \
